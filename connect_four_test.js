@@ -9,7 +9,9 @@ QUnit.test("it has 7 columns of 6 cells", function( assert ) {
   game.init("#cf-host");
   var $cells = $(".cell");
   var col1 = [$cells[0], $cells[7], $cells[14], $cells[21], $cells[28], $cells[35]];
-  assert.equal(col1, game.columns()[0]);
+  for (i in col1) {
+    assert.equal(col1[i], game.columns()[0][i]);
+  }
 });
 
 QUnit.test("it has a current player and turn", function( assert ) {
