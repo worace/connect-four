@@ -1,6 +1,18 @@
 //TODO -- maybe should render as columns
 //rather than rows since game is largely col
 //oriented
+function ErrorMessage($root, message) {
+  this.message = message
+  this.display = function() {
+    $root.append("<p id='error' style='display:none;'>"+this.message+"</p>");
+    $("#error").fadeIn();
+    window.setTimeout(function() {
+      $("#error").fadeOut(400, function() {
+        $(this).remove();
+      });
+    }, 800)
+  }
+}
 
 function ConnectFour() {
   this.rowCount = 6;
@@ -69,11 +81,12 @@ function ConnectFour() {
   }
 
   this.playCell = function($cell) {
-    //find lowest playable cell for that col;
-    //if it exists, play it
-    if (this.canPlay($cell)) {
-      $cell.addClass(this.currentPlayer());
+    var $play = this.playableCellFor($cell);
+    if ($play) {
+      $play.addClass(this.currentPlayer());
       this.turn ++;
+    } else {
+      (new ErrorMessage(this.$root, "Sorry, that column is full")).display();
     }
   }
 
@@ -85,9 +98,9 @@ function ConnectFour() {
   }
 
   this.init = function(rootSelector) {
-    $root = $(rootSelector);
-    this.setupBoard($root);
-    this.addCellListeners($root);
+    this.$root = $(rootSelector);
+    this.setupBoard(this.$root);
+    this.addCellListeners(this.$root);
   }
 
   this.currentPlayer = function() {

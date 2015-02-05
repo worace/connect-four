@@ -47,8 +47,7 @@ QUnit.test("can't play a cell twice", function( assert ) {
   assert.ok(!$cell.hasClass(other));
 });
 
-
-QUnit.skip("clicking an upper cell fills in the bottom cell for that column", function( assert ) {
+QUnit.test("clicking an upper cell fills in the bottom cell for that column", function( assert ) {
   var game = new ConnectFour()
   game.init("#cf-host");
   var color = game.currentPlayer();
@@ -59,5 +58,21 @@ QUnit.skip("clicking an upper cell fills in the bottom cell for that column", fu
   $topCell.click();
   assert.ok(!$topCell.hasClass(color));
   assert.ok($bottomCell.hasClass(color));
+});
+
+QUnit.test("shows an error message once all cells for a column are played", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+  var color = game.currentPlayer();
+
+  $start = $(".row:last .cell:first");
+
+  for (i = 0; i < game.rowCount; i++) {
+    $start.click();
+  }
+
+  assert.equal($("#error").length, 0);
+  $start.click();
+  assert.equal($("#error").length, 1);
 });
 

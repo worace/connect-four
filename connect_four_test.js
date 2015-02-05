@@ -56,3 +56,17 @@ QUnit.test("it finds best playable cell for a clicked cell", function( assert ) 
   var $next = $($(".cell")[(game.rowCount - 1) * game.columnCount - 1]);
   assert.deepEqual($next, game.playableCellFor($bottomRight));
 });
+
+QUnit.test("playableCellFor is null if all cells in col are played", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  //bottom right
+  var $current = $($(".cell")[game.rowCount * game.columnCount - 1]);
+
+  for (i = 0; i < game.rowCount; i++) {
+    game.playCell(game.playableCellFor($current));
+  }
+
+  assert.equal(game.playableCellFor($current), null);
+});
