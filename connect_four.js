@@ -1,3 +1,7 @@
+//TODO -- maybe should render as columns
+//rather than rows since game is largely col
+//oriented
+
 function ConnectFour() {
   this.rowCount = 6;
   this.columnCount = 7;
@@ -29,16 +33,12 @@ function ConnectFour() {
     }
   }
 
-  this.parentColumn = function($cell) {
-    console.log("find parent of", $cell);
+  this.parentColumn = function(cell) {
     var parent;
     for (var i = 0; i < this.columnCount; i++) {
       var col = this.columns()[i];
-      console.log("checking col", col);
-      for (var cell = 0; cell < this.rowCount; cell++) {
-        console.log("checking cell", col[cell]);
-        if (col[cell] == $cell) {
-          console.log("found it");
+      for (var c = 0; c < this.rowCount; c++) {
+        if (col[c] == cell) {
           parent = col;
           break
         }
@@ -48,7 +48,16 @@ function ConnectFour() {
   }
 
   this.playableCellFor = function($cell) {
-    return $cell;
+    var col = this.parentColumn($cell[0]).reverse();
+    var playable = null;
+    for (i in col) {
+      if (!this.played($(col[i]))) {
+        playable = $(col[i]);
+        break
+      }
+    }
+
+    return playable;
   }
 
   this.canPlay = function($cell) {

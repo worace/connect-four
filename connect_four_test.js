@@ -37,9 +37,9 @@ QUnit.test("it knows if a cell is played", function( assert ) {
 QUnit.test("it finds parent col for a cell", function( assert ) {
   var game = new ConnectFour()
   game.init("#cf-host");
-  var $c = $(".cell")[0];
+  var cell = $(".cell")[0];
   var col1 = game.columns()[0];
-  var parent = game.parentColumn($c);
+  var parent = game.parentColumn(cell);
   assert.deepEqual(col1, parent);
 });
 
@@ -48,10 +48,11 @@ QUnit.test("it finds best playable cell for a clicked cell", function( assert ) 
   game.init("#cf-host");
   var $bottomRight = $($(".cell")[game.rowCount * game.columnCount - 1]);
 
-  assert.equal($bottomRight, game.playableCellFor($bottomRight));
+  assert.deepEqual($bottomRight, game.playableCellFor($bottomRight));
   game.playCell($bottomRight);
+  assert.ok(game.played($bottomRight));
 
   //next playable cell is up 1 row
-  var $next = $(".cell")[(game.rowCount - 1) * game.columnCount - 1];
-  assert.equal($next, game.playableCellFor($bottomRight));
+  var $next = $($(".cell")[(game.rowCount - 1) * game.columnCount - 1]);
+  assert.deepEqual($next, game.playableCellFor($bottomRight));
 });
