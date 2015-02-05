@@ -48,7 +48,7 @@ QUnit.test("can't play a cell twice", function( assert ) {
 });
 
 
-QUnit.test("clicking an upper cell fills in the bottom cell for that column", function( assert ) {
+QUnit.skip("clicking an upper cell fills in the bottom cell for that column", function( assert ) {
   var game = new ConnectFour()
   game.init("#cf-host");
   var color = game.currentPlayer();

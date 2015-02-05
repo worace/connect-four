@@ -29,6 +29,28 @@ function ConnectFour() {
     }
   }
 
+  this.parentColumn = function($cell) {
+    console.log("find parent of", $cell);
+    var parent;
+    for (var i = 0; i < this.columnCount; i++) {
+      var col = this.columns()[i];
+      console.log("checking col", col);
+      for (var cell = 0; cell < this.rowCount; cell++) {
+        console.log("checking cell", col[cell]);
+        if (col[cell] == $cell) {
+          console.log("found it");
+          parent = col;
+          break
+        }
+      }
+    }
+    return parent;
+  }
+
+  this.playableCellFor = function($cell) {
+    return $cell;
+  }
+
   this.canPlay = function($cell) {
     return !this.played($cell);
   }
@@ -38,6 +60,8 @@ function ConnectFour() {
   }
 
   this.playCell = function($cell) {
+    //find lowest playable cell for that col;
+    //if it exists, play it
     if (this.canPlay($cell)) {
       $cell.addClass(this.currentPlayer());
       this.turn ++;

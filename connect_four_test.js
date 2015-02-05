@@ -9,9 +9,7 @@ QUnit.test("it has 7 columns of 6 cells", function( assert ) {
   game.init("#cf-host");
   var $cells = $(".cell");
   var col1 = [$cells[0], $cells[7], $cells[14], $cells[21], $cells[28], $cells[35]];
-  for (i in col1) {
-    assert.equal(col1[i], game.columns()[0][i]);
-  }
+  assert.deepEqual(col1, game.columns()[0]);
 });
 
 QUnit.test("it has a current player and turn", function( assert ) {
@@ -36,3 +34,24 @@ QUnit.test("it knows if a cell is played", function( assert ) {
   assert.ok(game.played($c));
 });
 
+QUnit.test("it finds parent col for a cell", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+  var $c = $(".cell")[0];
+  var col1 = game.columns()[0];
+  var parent = game.parentColumn($c);
+  assert.deepEqual(col1, parent);
+});
+
+QUnit.test("it finds best playable cell for a clicked cell", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+  var $bottomRight = $($(".cell")[game.rowCount * game.columnCount - 1]);
+
+  assert.equal($bottomRight, game.playableCellFor($bottomRight));
+  game.playCell($bottomRight);
+
+  //next playable cell is up 1 row
+  var $next = $(".cell")[(game.rowCount - 1) * game.columnCount - 1];
+  assert.equal($next, game.playableCellFor($bottomRight));
+});
