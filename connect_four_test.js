@@ -57,16 +57,45 @@ QUnit.test("it finds best playable cell for a clicked cell", function( assert ) 
   assert.deepEqual($next, game.playableCellFor($bottomRight));
 });
 
-QUnit.test("playableCellFor is null if all cells in col are played", function( assert ) {
+QUnit.test("it returns null playableCellFor if all cells in column are played", function( assert ) {
   var game = new ConnectFour()
   game.init("#cf-host");
 
   //bottom right
   var $current = $($(".cell")[game.rowCount * game.columnCount - 1]);
 
-  for (i = 0; i < game.rowCount; i++) {
+  for (var i = 0; i < game.rowCount; i++) {
     game.playCell(game.playableCellFor($current));
   }
 
   assert.equal(game.playableCellFor($current), null);
+});
+
+
+QUnit.test("it returns null winner before game is won", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  assert.equal(game.winningPlayer, null);
+  assert.ok(!game.victory());
+});
+
+QUnit.test("it finds the winning player", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  var $target1 = $(".row:last .cell:first"); //bottom left
+  var $target2 = $(".row:last .cell:last"); //bottom right
+
+  assert.equal($("#victory").length, 0);
+  for (var i = 0; i < 7; i++) {
+    if (i % 2 == 0) {
+      $target1.click(); //first player should win on 7th move
+    } else {
+      $target2.click();
+    }
+  }
+
+  assert.ok(game.victory());
+  assert.equal(game.winningPlayer, game.currentPlayer());
 });

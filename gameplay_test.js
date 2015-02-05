@@ -76,3 +76,33 @@ QUnit.test("shows an error message once all cells for a column are played", func
   assert.equal($("#error").length, 1);
 });
 
+QUnit.test("shows a victory message if a player wins", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  var $target1 = $(".row:last .cell:first"); //bottom left
+  var $target2 = $(".row:last .cell:last"); //bottom right
+
+  assert.equal($("#victory").length, 0);
+  for (var i = 0; i < 7; i++) {
+    if (i % 2 == 0) {
+      $target1.click(); //first player should win on 7th move
+    } else {
+      $target2.click();
+    }
+  }
+  assert.equal($("#victory").length, 1);
+});
+
+QUnit.test("handles a horizontal win", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  // play each col twice so black stacks
+  // on top of red and red eventually wins
+  for (var i = 0; i < 7; i++) {
+    var cell = $(".cell")[Math.floor(i/2)];
+    game.playCell($($(".cell")[Math.floor(i/2)]));
+  }
+  assert.equal(game.winningPlayer, game.currentPlayer());
+});
