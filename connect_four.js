@@ -30,7 +30,11 @@ function ConnectFour() {
   }
 
   this.canPlay = function($cell) {
-    return !($cell.hasClass(this.currentPlayer()) || $cell.hasClass(this.nextPlayer()));
+    return !this.played($cell);
+  }
+
+  this.played = function($cell) {
+    return ($cell.hasClass(this.currentPlayer()) || $cell.hasClass(this.nextPlayer()));
   }
 
   this.playCell = function($cell) {

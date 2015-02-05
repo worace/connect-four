@@ -27,3 +27,12 @@ QUnit.test("it knows the next player", function( assert ) {
   assert.equal("black", game.nextPlayer());
 });
 
+QUnit.test("it knows if a cell is played", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+  var $c = $(".cell:last");
+  assert.ok(!game.played($c));
+  game.playCell($c)
+  assert.ok(game.played($c));
+});
+
