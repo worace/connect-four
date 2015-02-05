@@ -1,13 +1,30 @@
 function ConnectFour() {
-  this.rows = [1,2,3,4,5,6];
-  this.columns = [1,2,3,4,5,6,7];
+  this.rowCount = 6;
+  this.columnCount = 7;
   this.turn = 1;
 
+  this.rows = function() {
+    return $(".row");
+  }
+
+  this.columns = function() {
+    var cols = [];
+    var $cells = $(".cell");
+    for (var c = 0; c < this.columnCount; c++) {
+      var col = [];
+      for (var i = 0; i < this.rowCount; i++) {
+        col.push($cells[i*this.columnCount + c])
+      }
+      cols.push(col);
+    }
+    return cols;
+  }
+
   this.setupBoard = function($selector) {
-    for (i in this.rows) {
-      $selector.append("<div class='row' id='row-" + i + "'></div>");
-      for (c in this.columns) {
-        $("#row-"+i).append("<div class='cell'></div>");
+    for (var r = 0; r < this.rowCount; r++) {
+      $selector.append("<div class='row' id='row-" + r + "'></div>");
+      for (var c = 0; c < this.columnCount; c++) {
+        $("#row-"+r).append("<div class='cell'></div>");
       }
     }
   }
