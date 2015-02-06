@@ -61,6 +61,47 @@ function ConnectFour() {
     return cols;
   }
 
+
+  this.diagonals = function() {
+    var buffer = [];
+    for (var i = 0; i < this.rowCount; i ++) {
+      buffer.push(undefined);
+    }
+
+    var forwardBuffer = this.rows()
+    var backwardBuffer = this.rows()
+    for (var i = 0; i < this.rowCount; i ++) {
+      var offset = this.rowCount - 1 - i;
+      forwardBuffer[i] = buffer.slice(0, offset).concat(forwardBuffer[i]);
+      backwardBuffer[i] = buffer.slice(0, i).concat(backwardBuffer[i]);
+    }
+
+    var diagonals = []
+
+    for (var i = 0; i < forwardBuffer[0].length; i ++) {
+      var d = [];
+      for (var row in forwardBuffer) {
+        if (!(forwardBuffer[row][i] == undefined)) {
+          d.push(forwardBuffer[row][i]);
+        }
+      }
+      diagonals.push(d)
+    }
+
+    var backlength = backwardBuffer.reverse()[0].length;
+    for (var i = 0; i < backlength; i ++) {
+      var d = [];
+      for (var row in backwardBuffer) {
+        if (!(backwardBuffer[row][i] == undefined)) {
+          d.push(backwardBuffer[row][i]);
+        }
+      }
+      diagonals.push(d)
+    }
+
+    return diagonals;
+  }
+
   this.setupBoard = function($selector) {
     for (var r = 0; r < this.rowCount; r++) {
       $selector.append("<div class='row' id='row-" + r + "'></div>");
@@ -153,8 +194,35 @@ function ConnectFour() {
     return false;
   }
 
+  this.winLengthDiagonals = function() {
+    var diagsToCheck = [];
+    for (var i in this.diagonals()) {
+      if (this.diagonals()[i].length >= this.winningStreak) {
+        diagsToCheck.push(this.diagonals()[i]);
+      }
+    }
+    return diagsToCheck;
+  }
+
+  this.diagonalWin = function() {
+    var diagsToCheck = this.winLengthDiagonals();
+    for (var d in diagsToCheck) {
+      var diag = diagsToCheck[d];
+      for (var i = 0; i < diag.length - (diag.length - this.winningStreak) - 1; i ++) {
+        var game = this;
+        var possibleWin = diag.slice(i, i+this.winningStreak);
+        var validWin = allHaveProp(possibleWin, function(cell) {
+          return $(cell).hasClass(game.currentPlayer());
+        });
+        if (validWin) {
+          return true;
+        }
+      }
+    }
+  }
+
   this.victory = function() {
-    return (this.verticalWin() || this.horizontalWin());
+    return (this.verticalWin() || this.horizontalWin() || this.diagonalWin());
   }
 }
 

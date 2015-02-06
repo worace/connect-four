@@ -105,4 +105,21 @@ QUnit.test("handles a horizontal win", function( assert ) {
     game.playCell($($(".cell")[Math.floor(i/2)]));
   }
   assert.equal(game.winningPlayer, game.currentPlayer());
+  assert.equal($("#victory").length, 1);
+});
+
+QUnit.test("handles a diagonal win", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  // playing straight across will eventually
+  // result in diag win for player 2
+  for (var i = 0; i < 22; i++) {
+    game.playCell($($(".cell")[i]));
+  }
+  assert.equal(game.winningPlayer, game.currentPlayer());
+  assert.equal($("#victory").length, 1);
+});
+
+QUnit.skip("moves can no longer be made once the game is won", function(assert) {
 });

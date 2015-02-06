@@ -12,6 +12,21 @@ QUnit.test("it has 7 columns of 6 cells", function( assert ) {
   assert.deepEqual(col1, game.columns()[0]);
 });
 
+QUnit.test("it finds diagonals", function( assert ) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  var $cells = $(".cell");
+  var dCount = 2*game.rowCount + 2*game.columnCount - 2; //perimeter - corner repeats
+  assert.equal(game.diagonals().length, dCount);
+
+  var sample = [$cells[0], $cells[8], $cells[16], $cells[24], $cells[32], $cells[40]];
+  var sample2 = [$cells[5], $cells[11], $cells[17], $cells[23], $cells[29], $cells[35]].reverse();
+
+  assert.ok(arrayContainsArray(game.diagonals(), sample));
+  assert.ok(arrayContainsArray(game.diagonals(), sample2));
+});
+
 QUnit.test("it has a current player and turn", function( assert ) {
   var game = new ConnectFour()
   assert.equal(1, game.turn);
@@ -99,3 +114,19 @@ QUnit.test("it finds the winning player", function( assert ) {
   assert.ok(game.victory());
   assert.equal(game.winningPlayer, game.currentPlayer());
 });
+
+var arrayContainsArray = function(container, target) {
+  for (var i in container) {
+    var equal = true;
+    var element = container[i];
+    for (var j = 0; j < element.length; j++) {
+      if (target[j] !== element[j]) {
+        equal = false
+      }
+    }
+    if (equal) {
+      return true;
+    }
+  }
+  return false;
+}
