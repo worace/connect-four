@@ -208,7 +208,7 @@ function ConnectFour() {
     var diagsToCheck = this.winLengthDiagonals();
     for (var d in diagsToCheck) {
       var diag = diagsToCheck[d];
-      for (var i = 0; i < diag.length - (diag.length - this.winningStreak) - 1; i ++) {
+      for (var i = 0; i < diag.length - this.winningStreak + 1; i ++) {
         var game = this;
         var possibleWin = diag.slice(i, i+this.winningStreak);
         var validWin = allHaveProp(possibleWin, function(cell) {
