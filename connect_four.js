@@ -11,14 +11,25 @@ function ConnectFour() {
 
   this.init = function(rootSelector) {
     this.$root = $(rootSelector);
+    this.renderNewGameButton(this.$root);
     this.setupBoard(this.$root);
     this.addCellListeners(this.$root);
+    this.addNewGameListener(this.$root);
   }
 
   this.addCellListeners = function($selector) {
     var game = this;
     $selector.find(".cell").click(function(e) {
       game.playCell($(this));
+    });
+  }
+
+  this.addNewGameListener = function($selector) {
+    var game = this;
+    $("#new-game").click(function(e) {
+      e.preventDefault();
+      $selector.children().remove();
+      (new ConnectFour()).init($selector);
     });
   }
 
@@ -111,6 +122,10 @@ function ConnectFour() {
     }
   }
 
+  this.renderNewGameButton = function($selector) {
+    $selector.append("<a href='javascript:void(0)' id='new-game'>New Game</a>");
+  }
+
   this.parentColumn = function(cell) {
     var parent;
     for (var i = 0; i < this.columnCount; i++) {
@@ -147,18 +162,22 @@ function ConnectFour() {
   }
 
   this.playCell = function($cell) {
-    var $play = this.playableCellFor($cell);
-    if ($play) {
-      $play.addClass(this.currentPlayer());
-      if (this.victory()) {
-        this.winningPlayer = this.currentPlayer();
-        console.log("game over, winner is: ", this.currentPlayer());
-        (new VictoryMessage(this.$root, "Congratulations: " + this.currentPlayer() + "! You won!")).display();
+    if (!this.winningPlayer) {
+      var $play = this.playableCellFor($cell);
+      if ($play) {
+        $play.addClass(this.currentPlayer());
+        if (this.victory()) {
+          this.winningPlayer = this.currentPlayer();
+          console.log("game over, winner is: ", this.currentPlayer());
+          (new VictoryMessage(this.$root, "Congratulations: " + this.currentPlayer() + "! You won!")).display();
+        } else {
+          this.turn ++;
+        }
       } else {
-        this.turn ++;
+        (new ErrorMessage(this.$root, "Sorry, that column is full")).display();
       }
     } else {
-      (new ErrorMessage(this.$root, "Sorry, that column is full")).display();
+      (new ErrorMessage(this.$root, "Sorry, " + this.winningPlayer + " already won this game. Click 'New Game' to play again.")).display();
     }
   }
 

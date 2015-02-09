@@ -121,5 +121,47 @@ QUnit.test("handles a diagonal win", function( assert ) {
   assert.equal($("#victory").length, 1);
 });
 
-QUnit.skip("moves can no longer be made once the game is won", function(assert) {
+QUnit.test("moves can no longer be made once the game is won", function(assert) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  var $target1 = $(".row:last .cell:first"); //bottom left
+  var $target2 = $(".row:last .cell:last"); //bottom right
+
+  assert.equal($("#victory").length, 0);
+  for (var i = 0; i < 7; i++) {
+    if (i % 2 == 0) {
+      $target1.click(); //first player should win on 7th move
+    } else {
+      $target2.click();
+    }
+  }
+  assert.equal(game.winningPlayer, game.currentPlayer());
+  assert.equal($("#victory").length, 1);
+
+  var currentPlayed = $(".red").length + $(".black").length
+  $target2.click();
+  assert.equal(($(".red").length + $(".black").length), currentPlayed);
+});
+
+QUnit.test("Can start a new game", function(assert) {
+  var game = new ConnectFour()
+  game.init("#cf-host");
+
+  var $target1 = $(".row:last .cell:first"); //bottom left
+  var $target2 = $(".row:last .cell:last"); //bottom right
+  for (var i = 0; i < 4; i++) {
+    if (i % 2 == 0) {
+      $target1.click(); //first player should win on 7th move
+    } else {
+      $target2.click();
+    }
+  }
+
+  assert.equal($(".red").length, 2);
+  assert.equal($(".black").length, 2);
+
+  $("#new-game").click();
+  assert.equal($(".red").length, 0);
+  assert.equal($(".black").length, 0);
 });
